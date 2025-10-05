@@ -1,4 +1,5 @@
--- gubby
+-- SUKUNA sources 
+--It appears to everyone 
 
 local function WEAR(id)
     game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(id)
@@ -27,11 +28,11 @@ end
 
 
 AvatarChanges(
-	77511372110162,     -- Torso
-	136003410970495,    -- Right Arm
-	122289109987160,    -- Left Arm
-	105216940798112,    -- Right Leg
-	110431485579564,    -- Left Leg
+	77511372110162,     -- تورس
+	136003410970495,    -- رجل يمنى
+	122289109987160,    -- رجل يسرى
+	105216940798112,    -- ذراع يمنى
+	110431485579564,    -- ذراع يسرى
 	0                 
 )
 
