@@ -1,0 +1,43 @@
+-- gubby
+
+local function WEAR(id)
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(id)
+end
+
+local cooldown = false
+
+local function AvatarChanges(torso, rarm, larm, rleg, lleg, head)
+    if cooldown then
+        return
+    end
+
+    cooldown = true
+
+    pcall(function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer({torso, rarm, larm, rleg, lleg, head})
+    end)
+
+    task.delay(1, function()
+        cooldown = false
+    end)
+end
+
+
+
+
+
+AvatarChanges(
+	77511372110162,     -- Torso
+	136003410970495,    -- Right Arm
+	122289109987160,    -- Left Arm
+	105216940798112,    -- Right Leg
+	110431485579564,    -- Left Leg
+	0                 
+)
+
+
+task.wait(1)
+
+WEAR(118654804220494)
+wait(1)
+WEAR(88432101086369)
