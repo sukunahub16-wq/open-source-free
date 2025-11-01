@@ -1,0 +1,241 @@
+
+game:GetService("StarterGui"):SetCore("SendNotification",{
+    Title = "BRUTON HUB ",
+    Text = "وليس من صنعي Jinxx0g هذا من صنع ",
+    Button1 = "تم",
+    Button2 = "-",
+    Duration = 30
+})
+
+task.wait(1)
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local LocalPlayer = Players.LocalPlayer
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+
+local changeBodyRemote = Remotes:FindFirstChild("ChangeCharacterBody")
+if changeBodyRemote then
+    local args = {[1] = {0,0,0,0,0,0}}
+    pcall(function()
+        changeBodyRemote:InvokeServer(table.unpack(args))
+    end)
+    print("[BRUTON HUB] تم تغيير الجسم")
+end
+
+task.wait(0.5)
+
+local itemIDs = {
+    10549346723,
+    13665898720,
+    63690008,
+    7075502,
+    113507819283335
+}
+
+local function equipItems(list)
+    local seen = {}
+    for _, id in ipairs(list) do
+        if not seen[id] then
+            seen[id] = true
+            local success, err = pcall(function()
+                Remotes:WaitForChild("Wear"):InvokeServer(id)
+            end)
+            if success then
+                print("ايدي سكن "..id.." جاهز.")
+            else
+                warn("خطا في الايدي "..id.." | "..خطأ(err))
+            end
+            task.wait(0.3)
+        end
+    end
+end
+
+equipItems(itemIDs)
+
+local extraIDs = {892268340, 892267099, 892265784}
+for _, id in ipairs(extraIDs) do
+    pcall(function()
+        Remotes:WaitForChild("Wear"):InvokeServer(id)
+    end)
+    print("[BRUTON HUB] تم اضافة العناصر"..id)
+    task.wait(0.3)
+end
+
+local externalScripts = {
+    "https://raw.githubusercontent.com/267266273ffsfs/sumir/refs/heads/main/Main.txt",
+    "https://raw.githubusercontent.com/267266273ffsfs/flutuar/refs/heads/main/Main.txt",
+    "https://raw.githubusercontent.com/267266273ffsfs/baconvoltar/refs/heads/main/Main.txt",
+    "https://raw.githubusercontent.com/267266273ffsfs/Bacon-laugh/refs/heads/main/Main.txt"
+}
+
+for _, url in ipairs(externalScripts) do
+    local success, err = pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
+    if success then
+        print("تم تحميل سكربتات الخارجية: "..url)
+    else
+        warn("خطأ في تحميل سكربتات الخارجية: "..url.." | "..tostring(err))
+    end
+    task.wait(0.3)
+end
+
+local buggedPlayers = {}
+local bugConnections = {}
+local Remote = ReplicatedStorage.RE:FindFirstChild("1Gu1n")
+
+local tool = Instance.new("Tool")
+tool.Name = "BRUTON SWORD"
+tool.RequiresHandle = true
+tool.CanBeDropped = true
+
+local handle = Instance.new("Part")
+handle.Name = "Handle"
+handle.Size = Vector3.new(0.1, 0.1, 0.1)
+handle.Massless = true
+handle.CanCollide = false
+handle.Transparency = 0.5
+handle.Color = Color3.fromRGB(255, 0, 0)
+local mesh = Instance.new("SpecialMesh", handle)
+mesh.MeshType = Enum.MeshType.Sphere
+mesh.Scale = Vector3.new(0.05, 0.05, 0.05)
+handle.Parent = tool
+
+local function createNotification(title, message, duration)
+    StarterGui:SetCore("SendNotification",{
+        Title = title,
+        Text = message,
+        Duration = duration or 3
+    })
+end
+
+
+local function bugPlayer(targetPlayer)
+    if not Remote then return end
+    if not targetPlayer or not targetPlayer.Character then return end
+
+    local playerName = targetPlayer.Name
+    if buggedPlayers[playerName] then
+        if bugConnections[playerName] then
+            bugConnections[playerName]:Disconnect()
+            bugConnections[playerName] = nil
+        end
+        buggedPlayers[playerName] = nil
+        createNotification("تم فك اللاعب", playerName .. " غير مجمد!")
+        return
+    end
+
+    buggedPlayers[playerName] = true
+    createNotification("التجميد مفعل", playerName .. " كككككك!")
+
+    bugConnections[playerName] = RunService.Stepped:Connect(function()
+        local target = Players:FindFirstChild(playerName)
+        if not target or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then
+            if bugConnections[playerName] then
+                bugConnections[playerName]:Disconnect()
+                bugConnections[playerName] = nil
+            end
+            buggedPlayers[playerName] = nil
+            return
+        end
+
+        local crazyVector = Vector3.new(
+            math.random(1e25, 1e25),
+            math.random(1e25, 1e25),
+            math.random(1e25, 1e25)
+        )
+
+        local args = {
+            [1] = target.Character.HumanoidRootPart,
+            [2] = target.Character.HumanoidRootPart,
+            [3] = crazyVector,
+            [4] = target.Character.HumanoidRootPart.Position,
+            [5] = nil,
+            [6] = nil,
+            [7] = 3000,
+            [8] = 3000,
+            [9] = { [1] = false },
+            [10] = {10000, Vector3.new(3000,3000,3000), BrickColor.new(29), 0.05, Enum.Material.SmoothPlastic, 0.05},
+            [11] = true,
+            [12] = false
+        }
+
+        Remote:FireServer(unpack(args))
+    end)
+end
+
+local function getPlayerFromMouse(mouse)
+    local target = mouse.Target
+    if not target then return nil end
+    local character = target.Parent
+    while character and not character:FindFirstChild("Humanoid") do
+        character = character.Parent
+    end
+    if character and character:FindFirstChild("Humanoid") then
+        return Players:GetPlayerFromCharacter(character)
+    end
+    return nil
+end
+
+tool.Equipped:Connect(function(mouse)
+    local character = tool.Parent
+    if character and character:FindFirstChild("Humanoid") and character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        local args = {79693262130649}
+        pcall(function()
+            Remotes:WaitForChild("Wear"):InvokeServer(unpack(args))
+        end)
+
+        mouse.Button1Down:Connect(function()
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            local animator = humanoid and humanoid:FindFirstChildOfClass("Animator")
+            if animator then
+                local anim = Instance.new("Animation")
+                anim.AnimationId = "rbxassetid://2410679501"
+                local track = animator:LoadAnimation(anim)
+                track:Play()
+            end
+
+            local targetPlayer = getPlayerFromMouse(mouse)
+            if targetPlayer and targetPlayer ~= LocalPlayer then
+                bugPlayer(targetPlayer)
+            else
+                createNotification("معلومة", "المس اللاعب مرة ثانية لازالة التجميد نادا برو ههه")
+            end
+        end)
+    end
+    createNotification("سيف بروتون جاهز", "المس واحد لتجمدو")
+end)
+
+tool.Unequipped:Connect(function()
+    local args = {79693262130649}
+    pcall(function()
+        Remotes:WaitForChild("Wear"):InvokeServer(unpack(args))
+    end)
+    createNotification("سيف التجميد", "الاداة غير مجهزة ")
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    local playerName = player.Name
+    if bugConnections[playerName] then
+        bugConnections[playerName]:Disconnect()
+        bugConnections[playerName] = nil
+    end
+    buggedPlayers[playerName] = nil
+end)
+
+LocalPlayer.Chatted:Connect(function(message)
+    if message:lower() == "/stopallbugs" then
+        for _, connection in pairs(bugConnections) do
+            if connection then connection:Disconnect() end
+        end
+        bugConnections = {}
+        buggedPlayers = {}
+        createNotification("التجميد موقف", "تم ايقاف كل شيء")
+    end
+end)
+
+tool.Parent = LocalPlayer.Backpack
+createNotification("سيف بروتون مجهز", "سوي رست عشان ينحذف.")
