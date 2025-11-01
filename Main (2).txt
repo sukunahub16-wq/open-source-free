@@ -64,16 +64,6 @@ for _, id in ipairs(extraIDs) do
     task.wait(0.3)
 end
 
-local externalScripts = {
-    "https://raw.githubusercontent.com/267266273ffsfs/sumir/refs/heads/main/Main.txt",
-    "https://raw.githubusercontent.com/267266273ffsfs/flutuar/refs/heads/main/Main.txt",
-    "https://raw.githubusercontent.com/267266273ffsfs/baconvoltar/refs/heads/main/Main.txt",
-    "https://raw.githubusercontent.com/267266273ffsfs/Bacon-laugh/refs/heads/main/Main.txt"
-}
-
-for _, url in ipairs(externalScripts) do
-    local success, err = pcall(function()
-        loadstring(game:HttpGet(url))()
     end)
     if success then
         print("تم تحميل سكربتات الخارجية: "..url)
